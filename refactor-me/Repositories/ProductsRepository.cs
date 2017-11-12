@@ -80,14 +80,12 @@ namespace refactor_me.Repositories
             return result.ToProduct();
         }
 
-        public List<ProductOption> GetAllProductOptions(Guid productId)
+        public ProductOptions GetAllProductOptions(Guid productId)
         {
             var productData = _productDataPool.CheckOut();
             var result = productData.ProductOptions.Where(item => item.ProductId == productId).ToList();
             _productDataPool.CheckIn(productData);
-            return result
-                    .Select(item => item.ToProductOption())
-                    .ToList();
+            return new ProductOptions(result.Select(item => item.ToProductOption()).ToList());
         }
 
         public ProductOption GetProductOption(Guid productId, Guid id)
@@ -125,13 +123,27 @@ namespace refactor_me.Repositories
         public void DeleteProductOption(Guid productId, Guid id)
         {
             var productData = _productDataPool.CheckOut();
-            var attached = productData.ProductOptions.Where(item => item.Id == id && item.ProductId == productId).FirstOrDefault();
-            if (attached == null)
+            var toDelete = productData.ProductOptions.Where(item => item.Id == id && item.ProductId == productId).FirstOrDefault();
+            if (toDelete == null)
             {
                 _productDataPool.CheckIn(productData);
                 return;
             }
-            productData.ProductOptions.Remove(attached);
+            productData.ProductOptions.Remove(toDelete);
+            productData.SaveChanges();
+            _productDataPool.CheckIn(productData);
+        }
+
+        public void DeleteAllProductOptionsForProduct(Guid productId)
+        {
+            var productData = _productDataPool.CheckOut();
+            var toDelete = productData.ProductOptions.Where(item => item.ProductId == productId).ToList();
+            if (toDelete.Count == 0)
+            {
+                _productDataPool.CheckIn(productData);
+                return;
+            }
+            productData.ProductOptions.RemoveRange(toDelete);
             productData.SaveChanges();
             _productDataPool.CheckIn(productData);
         }

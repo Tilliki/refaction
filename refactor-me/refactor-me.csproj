@@ -123,6 +123,7 @@
   <ItemGroup>
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ProductOptionsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Database\ProductTable.cs" />
     <Compile Include="Database\ProductDataContext.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductOption.cs" />
     <Compile Include="Database\ProductDataPool.cs" />
+    <Compile Include="Models\ProductOptions.cs" />
     <Compile Include="Models\Products.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IProductsRepository.cs" />

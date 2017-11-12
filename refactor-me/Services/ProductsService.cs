@@ -21,9 +21,18 @@ namespace refactor_me.Services
             return _productsRepository.CreateProduct(toCreate);
         }
 
-        public void DeleteProduct(Guid id)
+        public bool DeleteProduct(Guid id, bool includeOptions)
         {
+            if (_productsRepository.GetAllProductOptions(id).Items.Count > 0)
+            {
+                if (!includeOptions)
+                {
+                    return false;
+                }
+                _productsRepository.DeleteAllProductOptionsForProduct(id);
+            }
             _productsRepository.DeleteProduct(id);
+            return true;
         }
 
         public Products GetAllProducts()
@@ -46,7 +55,7 @@ namespace refactor_me.Services
             return _productsRepository.UpdateProduct(id, update);
         }
 
-        public List<ProductOption> GetAllProductOptions(Guid productId)
+        public ProductOptions GetAllProductOptions(Guid productId)
         {
             return _productsRepository.GetAllProductOptions(productId);
         }

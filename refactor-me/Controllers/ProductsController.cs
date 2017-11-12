@@ -10,7 +10,7 @@ using System.Web.Http.Description;
 namespace refactor_me.Controllers
 {
     /// <summary>
-    /// Controls the various URI's of the web service. Handles all of HTTP specific functionality.
+    /// Controls the various URI's of the web service. Handles all of HTTP specific functionality for products.
     /// </summary>
     [RoutePrefix("products")]
     public class ProductsController : ApiController
@@ -53,7 +53,7 @@ namespace refactor_me.Controllers
         [Route]
         [HttpGet]
         [ResponseType(typeof(Products))]
-        public IHttpActionResult SearchByName(string name)
+        public IHttpActionResult GetAllProductsWithNameLike(string name)
         {
             try
             {
@@ -65,95 +65,115 @@ namespace refactor_me.Controllers
             }
         }
 
-        [Route("{id}")]
+        /// <summary>
+        /// Get the product with the specified id.
+        /// </summary>
+        /// <param name="productId">The id of the product to get.</param>
+        /// <returns>The specified product.</returns>
+        [Route("{productId}")]
         [HttpGet]
         [ResponseType(typeof(Product))]
-        public IHttpActionResult GetProduct(Guid id)
+        public IHttpActionResult GetProduct(Guid productId)
         {
-            var product = _productsService.GetProduct(id);
-            if (product != null)
+            try
             {
-                return Ok(product);
+                var product = _productsService.GetProduct(productId);
+                if (product != null)
+                {
+                    return Ok(product);
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
+        /// <summary>
+        /// Creates a new product.
+        /// </summary>
+        /// <param name="product">The details of the product to create.</param>
+        /// <returns>The location and details of the created product.</returns>
         [Route]
         [HttpPost]
-        public IHttpActionResult Create(Product product)
+        [ResponseType(typeof(Product))]
+        public IHttpActionResult CreateProduct(Product product)
         {
-            var created = _productsService.CreateProduct(product);
-            return Created($"/products/{created.Id}", created);
+            try
+            {
+                if (!ValidateProduct(product))
+                {
+                    return BadRequest("The product details sent through are invalid");
+                }
+                var created = _productsService.CreateProduct(product);
+                return Created($"/products/{created.Id}", created);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
-        [Route("{id}")]
+        /// <summary>
+        /// Updates the specified product with new information.
+        /// </summary>
+        /// <param name="productId">The id of the product to update.</param>
+        /// <param name="product">The details of the required update.</param>
+        /// <returns>The updated product details.</returns>
+        [Route("{productId}")]
         [HttpPut]
-        public IHttpActionResult Update(Guid id, Product product)
+        [ResponseType(typeof(Product))]
+        public IHttpActionResult UpdateProduct(Guid productId, Product product)
         {
-            var result = _productsService.UpdateProduct(id, product);
-            if (result != null)
+            try
             {
-                return Ok(result);
-            }
+                if (!ValidateProduct(product))
+                {
+                    return BadRequest("The product details sent through are invalid");
+                }
 
-            return NotFound();
+                var result = _productsService.UpdateProduct(productId, product);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
-        [Route("{id}")]
+        private bool ValidateProduct(Product product)
+        {
+            return !string.IsNullOrEmpty(product.Name);
+        }
+
+        /// <summary>
+        /// Deletes the specified product.
+        /// </summary>
+        /// <param name="productId">The id of the product to delete.</param>
+        /// <param name="includeOptions">A boolean indicating whether to delete any options related to the product as well. Defaults to false. If false, the delete will fail if the product has options associated.</param>
+        /// <returns>The delete result.</returns>
+        [Route("{productId}")]
         [HttpDelete]
-        public IHttpActionResult Delete(Guid id)
+        public IHttpActionResult DeleteProduct(Guid productId, bool includeOptions = false)
         {
-            _productsService.DeleteProduct(id);
-            return Ok();
-        }
-
-        [Route("{productId}/options")]
-        [HttpGet]
-        public IHttpActionResult GetOptions(Guid productId)
-        {
-            var productOptions = _productsService.GetAllProductOptions(productId);
-            return Ok(new { Items = productOptions });
-        }
-
-        [Route("{productId}/options/{id}")]
-        [HttpGet]
-        public IHttpActionResult GetOption(Guid productId, Guid id)
-        {
-            var productOption = _productsService.GetProductOption(productId, id);
-            if (productOption != null)
+            try
             {
-                return Ok(productOption);
+                if (_productsService.DeleteProduct(productId, includeOptions))
+                {
+                    return Ok();
+                }
+                return BadRequest("The requested product has options associated with it. If you want to delete those as well, please include ?includeOptions=true to the end of the request.");
             }
-            return NotFound();
-        }
-
-        [Route("{productId}/options")]
-        [HttpPost]
-        public IHttpActionResult CreateOption(Guid productId, ProductOption option)
-        {
-            var created = _productsService.CreateProductOption(productId, option);
-            return Created($"/products/{productId}/options/{created.Id}", created);
-        }
-
-        [Route("{productId}/options/{id}")]
-        [HttpPut]
-        public IHttpActionResult UpdateOption(Guid productId, Guid id, ProductOption option)
-        {
-            var result = _productsService.UpdateProductOption(productId, id, option);
-            if (result != null)
+            catch (Exception e)
             {
-                return Ok(result);
+                return InternalServerError(e);
             }
-
-            return NotFound();
-        }
-
-        [Route("{productId}/options/{id}")]
-        [HttpDelete]
-        public IHttpActionResult DeleteOption(Guid productId, Guid id)
-        {
-            _productsService.DeleteProductOption(productId, id);
-            return Ok();
         }
     }
 }
