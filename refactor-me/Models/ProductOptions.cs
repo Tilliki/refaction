@@ -7,7 +7,7 @@ using System.Web;
 namespace refactor_me.Models
 {
     /// <summary>
-    /// A list of products.
+    /// A list of products options.
     /// </summary>
     public class ProductOptions
     {
@@ -28,7 +28,7 @@ namespace refactor_me.Models
         }
 
         /// <summary>
-        /// The list of products.
+        /// The list of product options.
         /// </summary>
         [JsonProperty]
         public List<ProductOption> Items => new List<ProductOption>(_productOptions);

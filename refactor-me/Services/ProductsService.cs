@@ -10,10 +10,12 @@ namespace refactor_me.Services
     public class ProductsService : IProductsService
     {
         private IProductsRepository _productsRepository;
+        private IProductOptionsRepository _productOptionsRepository;
 
-        public ProductsService(IProductsRepository productsRepository)
+        public ProductsService(IProductsRepository productsRepository, IProductOptionsRepository productOptionsRepository)
         {
             _productsRepository = productsRepository;
+            _productOptionsRepository = productOptionsRepository;
         }
 
         public Product CreateProduct(Product toCreate)
@@ -23,13 +25,13 @@ namespace refactor_me.Services
 
         public bool DeleteProduct(Guid id, bool includeOptions)
         {
-            if (_productsRepository.GetAllProductOptions(id).Items.Count > 0)
+            if (_productOptionsRepository.GetAllProductOptions(id).Items.Count > 0)
             {
                 if (!includeOptions)
                 {
                     return false;
                 }
-                _productsRepository.DeleteAllProductOptionsForProduct(id);
+                _productOptionsRepository.DeleteAllProductOptionsForProduct(id);
             }
             _productsRepository.DeleteProduct(id);
             return true;
@@ -57,27 +59,27 @@ namespace refactor_me.Services
 
         public ProductOptions GetAllProductOptions(Guid productId)
         {
-            return _productsRepository.GetAllProductOptions(productId);
+            return _productOptionsRepository.GetAllProductOptions(productId);
         }
 
         public ProductOption GetProductOption(Guid productId, Guid id)
         {
-            return _productsRepository.GetProductOption(productId, id);
+            return _productOptionsRepository.GetProductOption(productId, id);
         }
 
         public ProductOption CreateProductOption(Guid productId, ProductOption option)
         {
-            return _productsRepository.CreateProductOption(productId, option);
+            return _productOptionsRepository.CreateProductOption(productId, option);
         }
 
         public ProductOption UpdateProductOption(Guid productId, Guid id, ProductOption option)
         {
-            return _productsRepository.UpdateProductOption(productId, id, option);
+            return _productOptionsRepository.UpdateProductOption(productId, id, option);
         }
 
         public void DeleteProductOption(Guid productId, Guid id)
         {
-            _productsRepository.DeleteProductOption(productId, id);
+            _productOptionsRepository.DeleteProductOption(productId, id);
         }
     }
 }

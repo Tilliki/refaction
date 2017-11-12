@@ -23,7 +23,8 @@ namespace refactor_me
 
             container.RegisterType<IProductsService, ProductsService>();
             container.RegisterType<IProductsRepository, ProductsRepository>();
-            
+            container.RegisterType<IProductOptionsRepository, ProductOptionsRepository>();
+
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
     }

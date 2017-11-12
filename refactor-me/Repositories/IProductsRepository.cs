@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace refactor_me.Repositories
 {
+    /// <summary>
+    /// Provides a basic CRUD repository for Products.
+    /// </summary>
     public interface IProductsRepository
     {
         Products GetAllProducts();
@@ -15,11 +18,5 @@ namespace refactor_me.Repositories
         Product CreateProduct(Product toCreate);
         Product UpdateProduct(Guid id, Product update);
         void DeleteProduct(Guid id);
-        ProductOptions GetAllProductOptions(Guid productId);
-        ProductOption GetProductOption(Guid productId, Guid id);
-        ProductOption CreateProductOption(Guid productId, ProductOption option);
-        ProductOption UpdateProductOption(Guid productId, Guid id, ProductOption option);
-        void DeleteProductOption(Guid productId, Guid id);
-        void DeleteAllProductOptionsForProduct(Guid productId);
     }
 }
