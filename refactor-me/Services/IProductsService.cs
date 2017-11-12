@@ -9,8 +9,8 @@ namespace refactor_me.Services
 {
     public interface IProductsService
     {
-        List<Product> GetAllProducts();
-        List<Product> GetAllProductsWithNameLike(string name);
+        Products GetAllProducts();
+        Products GetAllProductsWithNameLike(string name);
         Product GetProduct(Guid id);
         Product CreateProduct(Product toCreate);
         Product UpdateProduct(Guid id, Product update);

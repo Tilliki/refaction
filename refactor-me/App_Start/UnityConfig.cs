@@ -6,8 +6,14 @@ using Unity.WebApi;
 
 namespace refactor_me
 {
+    /// <summary>
+    /// Configures Unity for dependency injection.
+    /// </summary>
     public static class UnityConfig
     {
+        /// <summary>
+        /// Register all components you need dependency injection on.
+        /// </summary>
         public static void RegisterComponents()
         {
             var container = new UnityContainer();
@@ -15,7 +21,6 @@ namespace refactor_me
             // register all your components with the container here
             // it is NOT necessary to register your controllers
 
-            // e.g. container.RegisterType<ITestService, TestService>();
             container.RegisterType<IProductsService, ProductsService>();
             container.RegisterType<IProductsRepository, ProductsRepository>();
             

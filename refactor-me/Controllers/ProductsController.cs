@@ -29,23 +29,40 @@ namespace refactor_me.Controllers
         /// <summary>
         /// Get a list of all of the available products.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The list of all products that are available/</returns>
         [Route]
         [HttpGet]
-        [ResponseType(typeof(List<Product>))]
-        public IHttpActionResult GetAll()
+        [ResponseType(typeof(Products))]
+        public IHttpActionResult GetAllProducts()
         {
-            var products = _productsService.GetAllProducts();
-            return Ok(new { Items = products });
+            try
+            {
+                return Ok(_productsService.GetAllProducts());
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
+        /// <summary>
+        /// Get a list of all products that contain the search string in their names.
+        /// </summary>
+        /// <param name="name">The search string to filter names by.</param>
+        /// <returns>The list of filtered names.</returns>
         [Route]
         [HttpGet]
-        [ResponseType(typeof(List<Product>))]
+        [ResponseType(typeof(Products))]
         public IHttpActionResult SearchByName(string name)
         {
-            var products = _productsService.GetAllProductsWithNameLike(name);
-            return Ok(new { Items = products } );
+            try
+            {
+                return Ok(_productsService.GetAllProductsWithNameLike(name));
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
         [Route("{id}")]

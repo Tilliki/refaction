@@ -26,12 +26,12 @@ namespace refactor_me.Services
             _productsRepository.DeleteProduct(id);
         }
 
-        public List<Product> GetAllProducts()
+        public Products GetAllProducts()
         {
             return _productsRepository.GetAllProducts();
         }
 
-        public List<Product> GetAllProductsWithNameLike(string name)
+        public Products GetAllProductsWithNameLike(string name)
         {
             return _productsRepository.GetAllProductsWithNameLike(name);
         }

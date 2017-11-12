@@ -39,24 +39,20 @@ namespace refactor_me.Repositories
             _productDataPool.CheckIn(productData);
         }
 
-        public List<Product> GetAllProducts()
+        public Products GetAllProducts()
         {
             var productData = _productDataPool.CheckOut();
             var result = productData.Products.ToList();
             _productDataPool.CheckIn(productData);
-            return result
-                    .Select(item => item.ToProduct())
-                    .ToList();
+            return new Products(result.Select(item => item.ToProduct()).ToList());
         }
 
-        public List<Product> GetAllProductsWithNameLike(string name)
+        public Products GetAllProductsWithNameLike(string name)
         {
             var productData = _productDataPool.CheckOut();
             var result = productData.Products.Where(item => item.Name.Contains(name)).ToList();
             _productDataPool.CheckIn(productData);
-            return result
-                    .Select(item => item.ToProduct())
-                    .ToList();
+            return new Products(result.Select(item => item.ToProduct()).ToList());
         }
 
         public Product GetProduct(Guid id)
