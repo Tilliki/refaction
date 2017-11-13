@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using refactor_me.Database;
 using refactor_me.Models;
@@ -13,9 +14,9 @@ namespace refactor_me.Repositories
     {
         private readonly ProductDataPool _productDataPool;
 
-        public ProductOptionsRepository()
+        public ProductOptionsRepository(int dataPoolSize)
         {
-            _productDataPool = new ProductDataPool(5);
+            _productDataPool = new ProductDataPool(dataPoolSize);
         }
 
         public ProductOptions GetAllProductOptions(Guid productId)
@@ -27,12 +28,12 @@ namespace refactor_me.Repositories
             return new ProductOptions(result.Select(item => item.ToProductOption()).ToList());
         }
 
-        public ProductOption GetProductOption(Guid productId, Guid id)
+        public ProductOption GetProductOption(Guid productId, Guid optionId)
         {
             var productData = _productDataPool.CheckOut();
             var result =
-                productData.ProductOptions.Where(item => (item.ProductId == productId) && (item.Id == id))
-                    .FirstOrDefault();
+                productData.ProductOptions
+                    .FirstOrDefault(item => (item.ProductId == productId) && (item.Id == optionId));
             _productDataPool.CheckIn(productData);
             return result?.ToProductOption();
         }
@@ -53,12 +54,12 @@ namespace refactor_me.Repositories
             return result.ToProductOption();
         }
 
-        public ProductOption UpdateProductOption(Guid productId, Guid id, ProductOption option)
+        public ProductOption UpdateProductOption(Guid productId, Guid optionId, ProductOption option)
         {
             var productData = _productDataPool.CheckOut();
             var result =
-                productData.ProductOptions.Where(item => (item.Id == id) && (item.ProductId == productId))
-                    .FirstOrDefault();
+                productData.ProductOptions
+                    .FirstOrDefault(item => (item.Id == optionId) && (item.ProductId == productId));
             if (result == null)
                 return null;
             result.Name = option.Name;
@@ -68,12 +69,12 @@ namespace refactor_me.Repositories
             return result.ToProductOption();
         }
 
-        public void DeleteProductOption(Guid productId, Guid id)
+        public void DeleteProductOption(Guid productId, Guid optionId)
         {
             var productData = _productDataPool.CheckOut();
             var toDelete =
-                productData.ProductOptions.Where(item => (item.Id == id) && (item.ProductId == productId))
-                    .FirstOrDefault();
+                productData.ProductOptions
+                    .FirstOrDefault(item => (item.Id == optionId) && (item.ProductId == productId));
             if (toDelete == null)
             {
                 _productDataPool.CheckIn(productData);

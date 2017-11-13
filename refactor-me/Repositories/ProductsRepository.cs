@@ -10,9 +10,9 @@ namespace refactor_me.Repositories
     {
         private readonly ProductDataPool _productDataPool;
 
-        public ProductsRepository()
+        public ProductsRepository(int dataPoolSize)
         {
-            _productDataPool = new ProductDataPool(5);
+            _productDataPool = new ProductDataPool(dataPoolSize);
         }
 
         public Product CreateProduct(Product toCreate)
@@ -32,10 +32,10 @@ namespace refactor_me.Repositories
             return result.ToProduct();
         }
 
-        public void DeleteProduct(Guid id)
+        public void DeleteProduct(Guid productId)
         {
             var productData = _productDataPool.CheckOut();
-            var attached = productData.Products.Where(item => item.Id == id).FirstOrDefault();
+            var attached = productData.Products.Where(item => item.Id == productId).FirstOrDefault();
             if (attached == null)
             {
                 _productDataPool.CheckIn(productData);
@@ -62,18 +62,18 @@ namespace refactor_me.Repositories
             return new Products(result.Select(item => item.ToProduct()).ToList());
         }
 
-        public Product GetProduct(Guid id)
+        public Product GetProduct(Guid productId)
         {
             var productData = _productDataPool.CheckOut();
-            var result = productData.Products.Where(item => item.Id == id).FirstOrDefault();
+            var result = productData.Products.Where(item => item.Id == productId).FirstOrDefault();
             _productDataPool.CheckIn(productData);
             return result?.ToProduct();
         }
 
-        public Product UpdateProduct(Guid id, Product update)
+        public Product UpdateProduct(Guid productId, Product update)
         {
             var productData = _productDataPool.CheckOut();
-            var result = productData.Products.Where(item => item.Id == id).FirstOrDefault();
+            var result = productData.Products.Where(item => item.Id == productId).FirstOrDefault();
             if (result == null)
                 return null;
             result.Name = update.Name;

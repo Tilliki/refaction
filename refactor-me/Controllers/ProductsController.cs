@@ -160,7 +160,8 @@ namespace refactor_me.Controllers
                     return Ok();
                 return
                     BadRequest(
-                        "The requested product has options associated with it. If you want to delete those as well, please include ?includeOptions=true to the end of the request.");
+                        "The requested product has options associated with it. " +
+                        "If you want to delete those as well, please include ?includeOptions=true to the end of the request.");
             }
             catch (Exception e)
             {

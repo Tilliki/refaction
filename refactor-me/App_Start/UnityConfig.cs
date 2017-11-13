@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Web.Http;
 using Microsoft.Practices.Unity;
 using refactor_me.Repositories;
@@ -22,8 +23,14 @@ namespace refactor_me
             // it is NOT necessary to register your controllers
 
             container.RegisterType<IProductsService, ProductsService>();
-            container.RegisterType<IProductsRepository, ProductsRepository>();
-            container.RegisterType<IProductOptionsRepository, ProductOptionsRepository>();
+
+            int dataPoolSize;
+            if (!int.TryParse(ConfigurationManager.AppSettings["DataPoolSize"], out dataPoolSize))
+            {
+                throw new ConfigurationErrorsException("Configuration setting DataPoolSize is not an integer.");
+            }
+            container.RegisterInstance<IProductsRepository>(new ProductsRepository(dataPoolSize));
+            container.RegisterInstance<IProductOptionsRepository>(new ProductOptionsRepository(dataPoolSize));
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }
