@@ -1,24 +1,21 @@
-﻿using refactor_me.Models;
-using refactor_me.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System;
 using System.Web.Http;
 using System.Web.Http.Description;
+using refactor_me.Models;
+using refactor_me.Services;
 
 namespace refactor_me.Controllers
 {
     /// <summary>
-    /// Controls the various URI's of the web service. Handles all of HTTP specific functionality for product options.
+    ///     Controls the various URI's of the web service. Handles all of HTTP specific functionality for product options.
     /// </summary>
     [RoutePrefix("products/{productId}/options")]
     public class ProductOptionsController : ApiController
     {
-        private IProductsService _productsService;
+        private readonly IProductsService _productsService;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ProductOptionsController"/>.
+        ///     Creates a new instance of <see cref="ProductOptionsController" />.
         /// </summary>
         /// <param name="productsService">The business layer controlling how products should be handled.</param>
         public ProductOptionsController(IProductsService productsService)
@@ -27,7 +24,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Gets all of the options associated with a product.
+        ///     Gets all of the options associated with a product.
         /// </summary>
         /// <param name="productId">The id of the product whose options are required.</param>
         /// <returns>A list of product options</returns>
@@ -47,7 +44,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Get a single option associated with a product.
+        ///     Get a single option associated with a product.
         /// </summary>
         /// <param name="productId">The id of the product the option is associated with.</param>
         /// <param name="optionId">The id of the required option.</param>
@@ -61,9 +58,7 @@ namespace refactor_me.Controllers
             {
                 var productOption = _productsService.GetProductOption(productId, optionId);
                 if (productOption != null)
-                {
                     return Ok(productOption);
-                }
                 return NotFound();
             }
             catch (Exception e)
@@ -73,7 +68,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Create an option for a product.
+        ///     Create an option for a product.
         /// </summary>
         /// <param name="productId">The id of the product the option is related to.</param>
         /// <param name="option">The details of the option.</param>
@@ -86,9 +81,7 @@ namespace refactor_me.Controllers
             try
             {
                 if (!ValidateOption(option))
-                {
                     return BadRequest("The product details sent through are invalid");
-                }
                 var created = _productsService.CreateProductOption(productId, option);
                 return Created($"/products/{productId}/options/{created.Id}", created);
             }
@@ -99,7 +92,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Update the details of a product option.
+        ///     Update the details of a product option.
         /// </summary>
         /// <param name="productId">The id of the product the option is associated with.</param>
         /// <param name="optionId">The id of the option.</param>
@@ -113,14 +106,10 @@ namespace refactor_me.Controllers
             try
             {
                 if (!ValidateOption(option))
-                {
                     return BadRequest("The product details sent through are invalid");
-                }
                 var result = _productsService.UpdateProductOption(productId, optionId, option);
                 if (result != null)
-                {
                     return Ok(result);
-                }
 
                 return NotFound();
             }
@@ -131,7 +120,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Delete an option associated with a product.
+        ///     Delete an option associated with a product.
         /// </summary>
         /// <param name="productId">The id of the product the option belongs to.</param>
         /// <param name="optionId">The id of the option to delete.</param>
@@ -151,7 +140,7 @@ namespace refactor_me.Controllers
             }
         }
 
-        private bool ValidateOption(ProductOption option)
+        private static bool ValidateOption(ProductOption option)
         {
             return !string.IsNullOrEmpty(option.Name);
         }

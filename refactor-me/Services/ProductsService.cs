@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using refactor_me.Models;
 using refactor_me.Repositories;
 
@@ -9,10 +6,11 @@ namespace refactor_me.Services
 {
     public class ProductsService : IProductsService
     {
-        private IProductsRepository _productsRepository;
-        private IProductOptionsRepository _productOptionsRepository;
+        private readonly IProductOptionsRepository _productOptionsRepository;
+        private readonly IProductsRepository _productsRepository;
 
-        public ProductsService(IProductsRepository productsRepository, IProductOptionsRepository productOptionsRepository)
+        public ProductsService(IProductsRepository productsRepository,
+            IProductOptionsRepository productOptionsRepository)
         {
             _productsRepository = productsRepository;
             _productOptionsRepository = productOptionsRepository;
@@ -28,9 +26,7 @@ namespace refactor_me.Services
             if (_productOptionsRepository.GetAllProductOptions(id).Items.Count > 0)
             {
                 if (!includeOptions)
-                {
                     return false;
-                }
                 _productOptionsRepository.DeleteAllProductOptionsForProduct(id);
             }
             _productsRepository.DeleteProduct(id);

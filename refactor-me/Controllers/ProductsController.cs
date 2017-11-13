@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Net;
 using System.Web.Http;
-using refactor_me.Models;
-using System.Collections.Generic;
-using refactor_me.Services;
-using System.Net.Http;
 using System.Web.Http.Description;
+using refactor_me.Models;
+using refactor_me.Services;
 
 namespace refactor_me.Controllers
 {
     /// <summary>
-    /// Controls the various URI's of the web service. Handles all of HTTP specific functionality for products.
+    ///     Controls the various URI's of the web service. Handles all of HTTP specific functionality for products.
     /// </summary>
     [RoutePrefix("products")]
     public class ProductsController : ApiController
     {
-        private IProductsService _productsService;
+        private readonly IProductsService _productsService;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ProductsController"/>.
+        ///     Creates a new instance of <see cref="ProductsController" />.
         /// </summary>
         /// <param name="productsService">The business layer controlling how products should be handled.</param>
         public ProductsController(IProductsService productsService)
@@ -27,7 +24,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Get a list of all of the available products.
+        ///     Get a list of all of the available products.
         /// </summary>
         /// <returns>The list of all products that are available/</returns>
         [Route]
@@ -46,7 +43,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Get a list of all products that contain the search string in their names.
+        ///     Get a list of all products that contain the search string in their names.
         /// </summary>
         /// <param name="name">The search string to filter names by.</param>
         /// <returns>The list of filtered names.</returns>
@@ -66,7 +63,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Get the product with the specified id.
+        ///     Get the product with the specified id.
         /// </summary>
         /// <param name="productId">The id of the product to get.</param>
         /// <returns>The specified product.</returns>
@@ -79,9 +76,7 @@ namespace refactor_me.Controllers
             {
                 var product = _productsService.GetProduct(productId);
                 if (product != null)
-                {
                     return Ok(product);
-                }
                 return NotFound();
             }
             catch (Exception e)
@@ -91,7 +86,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Creates a new product.
+        ///     Creates a new product.
         /// </summary>
         /// <param name="product">The details of the product to create.</param>
         /// <returns>The location and details of the created product.</returns>
@@ -103,9 +98,7 @@ namespace refactor_me.Controllers
             try
             {
                 if (!ValidateProduct(product))
-                {
                     return BadRequest("The product details sent through are invalid");
-                }
                 var created = _productsService.CreateProduct(product);
                 return Created($"/products/{created.Id}", created);
             }
@@ -116,7 +109,7 @@ namespace refactor_me.Controllers
         }
 
         /// <summary>
-        /// Updates the specified product with new information.
+        ///     Updates the specified product with new information.
         /// </summary>
         /// <param name="productId">The id of the product to update.</param>
         /// <param name="product">The details of the required update.</param>
@@ -129,15 +122,11 @@ namespace refactor_me.Controllers
             try
             {
                 if (!ValidateProduct(product))
-                {
                     return BadRequest("The product details sent through are invalid");
-                }
 
                 var result = _productsService.UpdateProduct(productId, product);
                 if (result != null)
-                {
                     return Ok(result);
-                }
 
                 return NotFound();
             }
@@ -147,16 +136,19 @@ namespace refactor_me.Controllers
             }
         }
 
-        private bool ValidateProduct(Product product)
+        private static bool ValidateProduct(Product product)
         {
             return !string.IsNullOrEmpty(product.Name);
         }
 
         /// <summary>
-        /// Deletes the specified product.
+        ///     Deletes the specified product.
         /// </summary>
         /// <param name="productId">The id of the product to delete.</param>
-        /// <param name="includeOptions">A boolean indicating whether to delete any options related to the product as well. Defaults to false. If false, the delete will fail if the product has options associated.</param>
+        /// <param name="includeOptions">
+        ///     A boolean indicating whether to delete any options related to the product as well.
+        ///     Defaults to false. If false, the delete will fail if the product has options associated.
+        /// </param>
         /// <returns>The delete result.</returns>
         [Route("{productId}")]
         [HttpDelete]
@@ -165,10 +157,10 @@ namespace refactor_me.Controllers
             try
             {
                 if (_productsService.DeleteProduct(productId, includeOptions))
-                {
                     return Ok();
-                }
-                return BadRequest("The requested product has options associated with it. If you want to delete those as well, please include ?includeOptions=true to the end of the request.");
+                return
+                    BadRequest(
+                        "The requested product has options associated with it. If you want to delete those as well, please include ?includeOptions=true to the end of the request.");
             }
             catch (Exception e)
             {

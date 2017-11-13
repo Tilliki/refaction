@@ -1,19 +1,15 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Web;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace refactor_me.Models
 {
     /// <summary>
-    /// This is the model representing the product. It is designed to be easily serialized and deserialized from Json.
+    ///     This is the model representing the product. It is designed to be easily serialized and deserialized from Json.
     /// </summary>
     public class Product
     {
         /// <summary>
-        /// Creates a new instance of <see cref="Product"/>.
+        ///     Creates a new instance of <see cref="Product" />.
         /// </summary>
         /// <param name="id">The unique identifier of the product.</param>
         /// <param name="name">The product name.</param>
@@ -31,31 +27,31 @@ namespace refactor_me.Models
         }
 
         /// <summary>
-        /// The unique identifier of the product.
+        ///     The unique identifier of the product.
         /// </summary>
         [JsonProperty]
         public Guid Id { get; }
 
         /// <summary>
-        /// The product name.
+        ///     The product name.
         /// </summary>
         [JsonProperty]
         public string Name { get; }
 
         /// <summary>
-        /// A description of the product.
+        ///     A description of the product.
         /// </summary>
         [JsonProperty]
         public string Description { get; }
 
         /// <summary>
-        /// The product's price.
+        ///     The product's price.
         /// </summary>
         [JsonProperty]
         public decimal Price { get; }
 
         /// <summary>
-        /// The price for delivering the product.
+        ///     The price for delivering the product.
         /// </summary>
         [JsonProperty]
         public decimal DeliveryPrice { get; }

@@ -1,14 +1,10 @@
-﻿using refactor_me.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using refactor_me.Models;
 
 namespace refactor_me.Repositories
 {
     /// <summary>
-    /// Provides a basic CRUD repository for Products.
+    ///     Provides a basic CRUD repository for Products.
     /// </summary>
     public interface IProductsRepository
     {

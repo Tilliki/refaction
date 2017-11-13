@@ -1,54 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using refactor_me.Models;
+
 namespace refactor_me.Database
 {
-    using Models;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
     /// <summary>
-    /// Represents the Product table in the database.
+    ///     Represents the Product table in the database.
     /// </summary>
     [Table("Product")]
-    public partial class ProductTable
+    public class ProductTable
     {
         /// <summary>
-        /// The unique identifier of the product.
+        ///     The unique identifier of the product.
         /// </summary>
         [Key]
         public Guid Id { get; set; }
 
         /// <summary>
-        /// The product name.
+        ///     The product name.
         /// </summary>
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
 
         /// <summary>
-        /// A description of the product.
+        ///     A description of the product.
         /// </summary>
         [StringLength(500)]
         public string Description { get; set; }
 
         /// <summary>
-        /// The product's price.
+        ///     The product's price.
         /// </summary>
         public decimal Price { get; set; }
 
         /// <summary>
-        /// The price for delivering the product.
+        ///     The price for delivering the product.
         /// </summary>
         public decimal DeliveryPrice { get; set; }
 
         /// <summary>
-        /// A list of options that belong to the product.
+        ///     A list of options that belong to the product.
         /// </summary>
         public IEnumerable<ProductOptionTable> ProductOptions { get; set; }
 
         /// <summary>
-        /// A helper function that converts the data object to a data transfer object.
+        ///     A helper function that converts the data object to a data transfer object.
         /// </summary>
         /// <returns>The data transfer object.</returns>
         public Product ToProduct()

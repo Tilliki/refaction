@@ -1,18 +1,18 @@
+using System.Web.Http;
 using Microsoft.Practices.Unity;
 using refactor_me.Repositories;
 using refactor_me.Services;
-using System.Web.Http;
 using Unity.WebApi;
 
 namespace refactor_me
 {
     /// <summary>
-    /// Configures Unity for dependency injection.
+    ///     Configures Unity for dependency injection.
     /// </summary>
     public static class UnityConfig
     {
         /// <summary>
-        /// Register all components you need dependency injection on.
+        ///     Register all components you need dependency injection on.
         /// </summary>
         public static void RegisterComponents()
         {

@@ -3,12 +3,12 @@
 namespace refactor_me
 {
     /// <summary>
-    /// Configures the basic routing for the web service.
+    ///     Configures the basic routing for the web service.
     /// </summary>
     public static class WebApiConfig
     {
         /// <summary>
-        /// Register the routes with the http configuration.
+        ///     Register the routes with the http configuration.
         /// </summary>
         /// <param name="config">The HttpServer configuration.</param>
         public static void Register(HttpConfiguration config)
@@ -22,9 +22,9 @@ namespace refactor_me
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                "DefaultApi",
+                "api/{controller}/{id}",
+                new {id = RouteParameter.Optional}
             );
         }
     }
