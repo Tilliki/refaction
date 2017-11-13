@@ -6,15 +6,25 @@ using refactor_me.Models;
 
 namespace refactor_me.Repositories
 {
+    /// <summary>
+    ///     Implementation of <see cref="IProductsRepository" />.
+    /// </summary>
     public class ProductsRepository : IProductsRepository
     {
         private readonly ProductDataPool _productDataPool;
 
+        /// <summary>
+        ///     Creates a new instance of <see cref="ProductsRepository" />.
+        /// </summary>
+        /// <param name="dataPoolSize">The size of the data pool available to the repository.</param>
         public ProductsRepository(int dataPoolSize)
         {
             _productDataPool = new ProductDataPool(dataPoolSize);
         }
 
+        /// <summary>
+        ///     <see cref="IProductsRepository.CreateProduct" />.
+        /// </summary>
         public Product CreateProduct(Product toCreate)
         {
             var productData = _productDataPool.CheckOut();
@@ -32,10 +42,13 @@ namespace refactor_me.Repositories
             return result.ToProduct();
         }
 
+        /// <summary>
+        ///     <see cref="IProductsRepository.DeleteProduct" />.
+        /// </summary>
         public void DeleteProduct(Guid productId)
         {
             var productData = _productDataPool.CheckOut();
-            var attached = productData.Products.Where(item => item.Id == productId).FirstOrDefault();
+            var attached = productData.Products.FirstOrDefault(item => item.Id == productId);
             if (attached == null)
             {
                 _productDataPool.CheckIn(productData);
@@ -46,6 +59,9 @@ namespace refactor_me.Repositories
             _productDataPool.CheckIn(productData);
         }
 
+        /// <summary>
+        ///     <see cref="IProductsRepository.GetAllProducts" />.
+        /// </summary>
         public Products GetAllProducts()
         {
             var productData = _productDataPool.CheckOut();
@@ -54,6 +70,9 @@ namespace refactor_me.Repositories
             return new Products(result.Select(item => item.ToProduct()).ToList());
         }
 
+        /// <summary>
+        ///     <see cref="IProductsRepository.GetAllProductsWithNameLike" />.
+        /// </summary>
         public Products GetAllProductsWithNameLike(string name)
         {
             var productData = _productDataPool.CheckOut();
@@ -62,18 +81,24 @@ namespace refactor_me.Repositories
             return new Products(result.Select(item => item.ToProduct()).ToList());
         }
 
+        /// <summary>
+        ///     <see cref="IProductsRepository.GetProduct" />.
+        /// </summary>
         public Product GetProduct(Guid productId)
         {
             var productData = _productDataPool.CheckOut();
-            var result = productData.Products.Where(item => item.Id == productId).FirstOrDefault();
+            var result = productData.Products.FirstOrDefault(item => item.Id == productId);
             _productDataPool.CheckIn(productData);
             return result?.ToProduct();
         }
 
+        /// <summary>
+        ///     <see cref="IProductsRepository.UpdateProduct" />.
+        /// </summary>
         public Product UpdateProduct(Guid productId, Product update)
         {
             var productData = _productDataPool.CheckOut();
-            var result = productData.Products.Where(item => item.Id == productId).FirstOrDefault();
+            var result = productData.Products.FirstOrDefault(item => item.Id == productId);
             if (result == null)
                 return null;
             result.Name = update.Name;

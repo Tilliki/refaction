@@ -21,15 +21,15 @@ namespace refactor_me.Services
             return _productsRepository.CreateProduct(toCreate);
         }
 
-        public bool DeleteProduct(Guid id, bool includeOptions)
+        public bool DeleteProduct(Guid productId, bool includeOptions)
         {
-            if (_productOptionsRepository.GetAllProductOptions(id).Items.Count > 0)
+            if (_productOptionsRepository.GetAllProductOptions(productId).Items.Count > 0)
             {
                 if (!includeOptions)
                     return false;
-                _productOptionsRepository.DeleteAllProductOptionsForProduct(id);
+                _productOptionsRepository.DeleteAllProductOptionsForProduct(productId);
             }
-            _productsRepository.DeleteProduct(id);
+            _productsRepository.DeleteProduct(productId);
             return true;
         }
 
@@ -43,14 +43,14 @@ namespace refactor_me.Services
             return _productsRepository.GetAllProductsWithNameLike(name);
         }
 
-        public Product GetProduct(Guid id)
+        public Product GetProduct(Guid productId)
         {
-            return _productsRepository.GetProduct(id);
+            return _productsRepository.GetProduct(productId);
         }
 
-        public Product UpdateProduct(Guid id, Product update)
+        public Product UpdateProduct(Guid productId, Product update)
         {
-            return _productsRepository.UpdateProduct(id, update);
+            return _productsRepository.UpdateProduct(productId, update);
         }
 
         public ProductOptions GetAllProductOptions(Guid productId)
@@ -58,9 +58,9 @@ namespace refactor_me.Services
             return _productOptionsRepository.GetAllProductOptions(productId);
         }
 
-        public ProductOption GetProductOption(Guid productId, Guid id)
+        public ProductOption GetProductOption(Guid productId, Guid optionId)
         {
-            return _productOptionsRepository.GetProductOption(productId, id);
+            return _productOptionsRepository.GetProductOption(productId, optionId);
         }
 
         public ProductOption CreateProductOption(Guid productId, ProductOption option)
@@ -68,14 +68,14 @@ namespace refactor_me.Services
             return _productOptionsRepository.CreateProductOption(productId, option);
         }
 
-        public ProductOption UpdateProductOption(Guid productId, Guid id, ProductOption option)
+        public ProductOption UpdateProductOption(Guid productId, Guid optionId, ProductOption option)
         {
-            return _productOptionsRepository.UpdateProductOption(productId, id, option);
+            return _productOptionsRepository.UpdateProductOption(productId, optionId, option);
         }
 
-        public void DeleteProductOption(Guid productId, Guid id)
+        public void DeleteProductOption(Guid productId, Guid optionId)
         {
-            _productOptionsRepository.DeleteProductOption(productId, id);
+            _productOptionsRepository.DeleteProductOption(productId, optionId);
         }
     }
 }
