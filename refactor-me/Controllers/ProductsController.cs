@@ -147,12 +147,12 @@ namespace refactor_me.Controllers
         /// <param name="productId">The id of the product to delete.</param>
         /// <param name="includeOptions">
         ///     A boolean indicating whether to delete any options related to the product as well.
-        ///     Defaults to false. If false, the delete will fail if the product has options associated.
+        ///     Defaults to true. If false, the delete will fail if the product has options associated.
         /// </param>
         /// <returns>The delete result.</returns>
         [Route("{productId}")]
         [HttpDelete]
-        public IHttpActionResult DeleteProduct(Guid productId, bool includeOptions = false)
+        public IHttpActionResult DeleteProduct(Guid productId, bool includeOptions = true)
         {
             try
             {
@@ -160,8 +160,8 @@ namespace refactor_me.Controllers
                     return Ok();
                 return
                     BadRequest(
-                        "The requested product has options associated with it. " +
-                        "If you want to delete those as well, please include ?includeOptions=true to the end of the request.");
+                        "The requested product has options associated with it, " +
+                        "and you have included ?includeOptions=false.");
             }
             catch (Exception e)
             {
