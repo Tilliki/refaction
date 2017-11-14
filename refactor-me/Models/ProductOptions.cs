@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace refactor_me.Models
 {
@@ -27,5 +28,53 @@ namespace refactor_me.Models
         /// </summary>
         [JsonProperty]
         public List<ProductOption> Items => new List<ProductOption>(_productOptions);
+
+        /// <summary>
+        ///     <see cref="object.GetHashCode"/>
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return new
+            {
+                items = Items
+            }.GetHashCode();
+        }
+
+        /// <summary>
+        ///     <see cref="object.Equals(object)"/>
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            var rhs = obj as ProductOptions;
+
+            if (rhs == null)
+                return false;
+
+            return (Items.SequenceEqual(rhs.Items));
+        }
+
+        public static bool operator ==(ProductOptions lhs, ProductOptions rhs)
+        {
+            if (ReferenceEquals(lhs, null))
+                return ReferenceEquals(rhs, null);
+
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(ProductOptions lhs, ProductOptions rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        /// <summary>
+        ///     <see cref="object.ToString"/>
+        /// </summary>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

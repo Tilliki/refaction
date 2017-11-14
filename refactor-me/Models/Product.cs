@@ -55,5 +55,61 @@ namespace refactor_me.Models
         /// </summary>
         [JsonProperty]
         public decimal DeliveryPrice { get; }
+
+        /// <summary>
+        ///     <see cref="object.GetHashCode"/>
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return new
+            {
+                id = Id,
+                name = Name,
+                description = Description,
+                price = Price,
+                deliveryPrice = DeliveryPrice
+            }.GetHashCode();
+        }
+
+        /// <summary>
+        ///     <see cref="object.Equals(object)"/>
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            var rhs = obj as Product;
+
+            if (rhs == null)
+                return false;
+
+            return (Id == rhs.Id) &&
+                (Name == rhs.Name) &&
+                (Description == rhs.Description) &&
+                (Price == rhs.Price) &&
+                (DeliveryPrice == rhs.DeliveryPrice);
+        }
+
+        public static bool operator ==(Product lhs, Product rhs)
+        {
+            if (ReferenceEquals(lhs, null))
+                return ReferenceEquals(rhs, null);
+
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(Product lhs, Product rhs)
+        {
+            return !(lhs == rhs);
+        }
+
+        /// <summary>
+        ///     <see cref="object.ToString"/>
+        /// </summary>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }
